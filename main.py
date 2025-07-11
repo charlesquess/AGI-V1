@@ -55,6 +55,7 @@ def main():
         print(f"Assistant: {response}\n")
 
         # 根据意图更新记忆
+        # 判断意图并更新相应的记忆存储
         if intent == 'record':
             timestamp = Tools.tooget_timestamp()
             em_store.add_memory(user_input, timestamp)

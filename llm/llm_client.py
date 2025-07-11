@@ -26,6 +26,7 @@ class LLMClient:
             raise Exception(f"Error calling LLM API: {response.status_code} {response.text}")
     
     def generate_response(self, prompt, model="gpt-3.5-turbo", temperature=0.7):
-        response = self.call_llm(prompt, model, temperature)
+        # response = self.call_llm(prompt, model, temperature)
+        response = "hello world"
         return response["text"]
     
