@@ -46,22 +46,25 @@ def main():
             break
 
         # 意图识别
-        intent = intent_detector.detect_intent(user_input)
+        intents = intent_detector.detect_intent(user_input)
+        print(f"Assistant: 你说的是{intents}。")
 
         # 记忆检索与工作记忆填充
-        relevant_memories = memory_filter.filter(intent, user_input)
+        # 根据意图检索相应的记忆并填充到工作记忆中
+        # 多个意图一次检索
+        relevant_memories = memory_filter.filter(intents, user_input)
         wm.load_memories(relevant_memories)
 
         # 调度生成回复
-        response = dispatcher.generate_response(user_input, intent, wm)
+        response = dispatcher.generate_response(user_input, intents, wm)
         print(f"Assistant: {response}\n")
 
         # 根据意图更新记忆
         # 判断意图并更新相应的记忆存储
-        if intent == 'record':
+        if intents == 'record':
             timestamp = Tools.tooget_timestamp()
             em_store.add_memory(user_input, timestamp)
-        elif intent == 'update_goal':
+        elif intents == 'update_goal':
             ms_store.add_goal(user_input, Tools.get_timestamp())
         # Summary memory 可在 em_store 内部或单独触发
 

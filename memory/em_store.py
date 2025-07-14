@@ -13,11 +13,6 @@ class EMStore:
         # 添加记忆到事实记忆体
         self.memory.append({"text": text, "timestamp": timestamp})
 
-    def select_memory(self):
-        # 根据需要内容选择记忆
-        # 这里可以实现更复杂的选择逻辑
-        return self.memory[-1]
-
     def compress_memory(self):
         # 调取记忆筛选器进行压缩事实记忆体到知识记忆体或目标记忆体中
         # 压缩完成后清除该条事实记忆

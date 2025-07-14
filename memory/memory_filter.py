@@ -2,24 +2,40 @@
 
 class MemoryFilter:
     def __init__(self, em_store, sm_store, ms_store):
+        """
+        初始化 MemoryFilter
+        :param em_store: dict，事实记忆体（episodic memory）
+        :param sm_store: dict，语义记忆体（semantic memory）
+        :param ms_store: dict，目标追踪模块（mission state memory）
+        """
         self.em_store = em_store
         self.sm_store = sm_store
         self.ms_store = ms_store
 
-    def filter(self, memory):
-        # 筛选出符合条件的记忆
-        # memory 是一个列表，包含了需要筛选的记忆项
+    def filter(self, intents, user_input):
+        """
+        根据意图和用户输入筛选匹配的记忆项
+        :param intents: list，表示当前识别出的用户意图关键词或标签
+        :param user_input: str，原始用户输入
+        :return: list，符合意图的记忆项内容
+        """
+        print(f"MemoryFilter: filter method called with intents: {intents}, user_input: {user_input}")
+
         filtered_memory = []
-        # 遍历 memory 列表，检查每个记忆项是否在各个存储中
-        # 如果在事实记忆体、语义记忆体或目标追踪模块中存在所需相关项，则添加到 filtered_memory 列表中
-        for item in memory:
-            # 遍历事实记忆体
-            if item in self.em_store:
-                filtered_memory.append(item)
-            # 遍历语义记忆体
-            elif item in self.sm_store:
-                filtered_memory.append(item)
-            # 遍历目标追踪模块
-            elif item in self.ms_store:
-                filtered_memory.append(item)
+
+        for intent in intents:
+            print(f"\n检索意图: {intent}")
+
+            if intent in self.em_store:
+                print("\u2714 匹配到事实记忆体")
+                filtered_memory.append({"source": "em_store", "intent": intent, "content": self.em_store[intent]})
+
+            if intent in self.sm_store:
+                print("\u2714 匹配到语义记忆体")
+                filtered_memory.append({"source": "sm_store", "intent": intent, "content": self.sm_store[intent]})
+
+            if intent in self.ms_store:
+                print("\u2714 匹配到目标追踪模块")
+                filtered_memory.append({"source": "ms_store", "intent": intent, "content": self.ms_store[intent]})
+
         return filtered_memory

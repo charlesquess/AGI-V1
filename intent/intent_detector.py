@@ -44,10 +44,17 @@ class IntentDetector:
         """
         # 将用户输入转换为小写，便于匹配
         self.user_input = user_input.lower()
+        print(f"用户输入：{self.user_input}")
+        # intent 是多个意图的集合
+        intents = set()
         # 遍历意图关键词字典，检查用户输入是否包含关键词
         for intent, keywords in self.intent_keywords.items():
             if any(keyword in self.user_input for keyword in keywords):
-                return intent
+                intents.add(intent)
+        # 若有多个意图，则返回多个意图
+        if len(intents) > 0:
+            return intents
+        # 若没有意图，则返回“不明确”
         return "unknown"
     
     def update_memory(self, intent):
@@ -97,24 +104,3 @@ class LanguageDispatcher:
         self.intent_detector.update_memory(intent)
         response = self.intent_detector.generate_response(user_input)
         return intent, response
-    
-class compress_memory:
-    """
-    记忆压缩模块
-        该模块用于优化和压缩记忆存储，能够将冗余信息进行合并和删除
-    """
-    def __init__(self, em_store, sm_store, ms_store):
-        self.em_store = em_store
-        self.sm_store = sm_store
-        self.ms_store = ms_store
-
-    def compress(self):
-        """
-        压缩事实记忆体到知识记忆体或目标记忆体中
-        """
-        compressed_memory = self.em_store.compress_memory()
-        if compressed_memory:
-            # 将压缩后的记忆添加到知识记忆体或目标记忆体中
-            self.sm_store.add_memory(compressed_memory)
-            # 清除事实记忆体中的该条记忆
-            self.em_store.clear_memory()
