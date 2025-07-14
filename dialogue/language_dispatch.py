@@ -5,45 +5,14 @@ class LanguageDispatcher:
     负责构建多角色对话消息 (roles)、调用 LLM 并返回最终回复。
     """
 
-    def __init__(self, llm_client, system_prompt: str = None, abstractor=None, default_model: str = "gpt-3.5-turbo"):
-        """
-        :param llm_client: LLMClient 或 LocalLLMClient 实例
-        :param system_prompt: 系统提示词
-        :param abstractor: Abstractor 实例（可选）
-        :param default_model: 默认模型名
-        """
+    def __init__(self, llm_client, system_prompt=None, abstractor=None, default_model="gpt-3.5-turbo"):
         self.llm = llm_client
         self.system_prompt = system_prompt or "你是一名智能助手。"
         self.abstractor = abstractor
         self.default_model = default_model
-
-    def __init__(self):
-        self.context = []    # 保存历史对话
-        self.memories = ""   # 摘要后的记忆文本
-
-    def load_memories(self, memory_items):
-        if isinstance(memory_items, list):
-            # 只取 content 字段构建字符串
-            self.memories = "\n".join(item["content"] for item in memory_items)
-        else:
-            self.memories = str(memory_items)
-
-    def add_context(self, text):
-        self.context.append(text)
-
-    def get_prompt(self, user_input, intents):
-        # 如果你想继续使用这个，就保留
-        parts = [
-            "历史记忆：",
-            self.memories,
-            "\n对话上下文：",
-            "\n".join(self.context),
-            f"\n当前意图：{', '.join(intents)}",
-            f"\n用户输入：{user_input}",
-            "\n助手回复："
-        ]
-        return "\n".join(parts)
-        
+        self.context = []
+        self.memories = ""
+    
     def generate_response(
         self,
         user_input: str,
@@ -72,19 +41,24 @@ class LanguageDispatcher:
             if abstracts:
                 memory_section = "抽象记忆：\n" + "\n".join(abstracts)
 
-        # —— 2. 准备上下文和意图字符串 —— 
-        context_str = "\n".join(working_memory.context)
-        intent_str  = ", ".join(intents)
+        # —— 2. 准备上下文和意图字符串，生成 memory_section 文本内容 —— 
+        if isinstance(memory_section, list):
+            # 提取每条记忆的 content 字段
+            memory_text = "\n".join(
+                m["content"] if isinstance(m, dict) else str(m)
+                for m in memory_section
+            )
+        else:
+            memory_text = str(memory_section)
 
-        # —— 3. 构造 OpenAI-compatible messages 格式 —— 
+        # —— 3. 构造 messages —— 
         messages = [
             {"role": "system",    "content": self.system_prompt},
-            {"role": "assistant", "content": "历史记忆：\n" + memory_section},
-            {"role": "assistant", "content": "对话上下文：\n" + context_str},
-            {"role": "assistant", "content": f"当前意图：{intent_str}"},
+            {"role": "assistant", "content": "历史记忆：\n" + memory_text},
+            {"role": "assistant", "content": "对话上下文：\n" + "\n".join(working_memory.context)},
+            {"role": "assistant", "content": f"当前意图：{', '.join(intents)}"},
             {"role": "user",      "content": user_input},
         ]
-
         # —— 4. 调用 LLMClient.chat —— 
         try:
             # 这里假设你的 LLMClient.chat 接口签名为 chat(messages=..., model=..., ...)
