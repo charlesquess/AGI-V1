@@ -1,20 +1,62 @@
 # 抽象记忆层
 
 
+from llm.llm_client import LLMClient
+from config import API_KEY, API_URL
+from memory.sm_store import SMStore
+
 class Abstractor:
-    def __init__(self, memory):
-        self.memory = memory
+    """
+    抽象器模块：从 EMStore 中提取历史事实并总结抽象概念，写入 SMStore。
+    """
 
-    def em_memory_to_sm_memory(self, em_memory):
-        # 分析事实记忆并转换成抽象记忆
-        # 例如：频繁出现"麦当劳"→"早餐偏好为麦当劳"
-        pass
+    def __init__(self, em_store, sm_store=None):
+        self.em_store = em_store
+        self.sm_store = sm_store or SMStore()
+        self.llm = LLMClient(API_KEY, API_URL)
 
-    def em_memory_to_ms_memory(self, em_memory):
-        # 分析事实记忆并转换成目标追踪记忆
-        # 例如： 某天用户说。需要减肥。 ——> 减肥
-        pass
+    def abstract(self, key: str):
+        """
+        对指定 key（如“吃饭”、“学习”等）对应的历史事实进行抽象总结。
+        :param key: 要抽象的意图或主题
+        :return: 抽象总结字符串（并已写入 SMStore）
+        """
+        # 从 EMStore 中获取所有历史记录
+        records = self.em_store.get_all(key)
+        if not records:
+            print(f"[Abstractor] No episodic records found for key: {key}")
+            return None
 
-    def should_abstract(self, em_count):
-        # 判断是否需要进行抽象记忆
-        return em_count > 10
+        # 构建提示词，输入给 LLM
+        memory_text = "\n".join([f"- {content}（{ts}）" for content, ts in records])
+        prompt = f"""
+            你是一名智能助理，请根据以下历史事实，为用户生成一个抽象总结。总结应简洁、概括，并包含用户的偏好或习惯。
+
+            历史事实：
+            {memory_text}
+
+            请用一句简短的话总结这个主题：“{key}”。
+            """
+
+        # 请求 LLM
+        summary = self.llm.chat(prompt).strip()
+
+        # 存入 SMStore（语义记忆体）
+        self.sm_store.add(key, summary)
+
+        print(f"[Abstractor] 抽象结果已写入语义记忆体: {summary}")
+        return summary
+    
+if __name__ == '__main__':
+    from memory.em_store import EMStore
+    from memory.sm_store import SMStore
+
+    em = EMStore()
+    sm = SMStore()
+    ab = Abstractor(em, sm)
+
+    # 示例调用
+    summary = ab.abstract("吃饭")
+    print("抽象总结:", summary)
+
+    # 现在可以用 sm.get("吃饭") 查看抽象结果
