@@ -16,7 +16,8 @@ v1_assistant/
 │   ├── em_store.py       # 事实记忆体
 │   ├── sm_store.py       # 语义记忆体(摘要)
 │   ├── ms_store.py       # 目标追踪
-│   └── memory_filter.py  # 记忆筛选器模块
+│   ├── memory_filter.py  # 记忆筛选器模块
+│   └── abstractor.py     # 记忆抽象类
 ├── intent/
 │   └── intent_detector.py # 意图识别模块
 ├── wm/
