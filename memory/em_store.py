@@ -1,13 +1,11 @@
 # 事实记忆体模块
 
-from intent.intent_detector import IntentDetector
 from memory.sm_store import SMStore
 from memory.ms_store import MSStore
 
 class EMStore:
     def __init__(self):
         self.memory = []
-        self.intent_detector = IntentDetector() # 初始化意图识别器
         self.sm_store = SMStore()
         self.ms_store = MSStore()
 

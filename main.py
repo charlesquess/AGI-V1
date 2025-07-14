@@ -5,6 +5,7 @@ from memory.em_store import EMStore
 from memory.sm_store import SMStore
 from memory.ms_store import MSStore
 from memory.memory_filter import MemoryFilter
+from memory.abstractor import Abstractor
 from wm.working_memory import WorkingMemory
 from dialogue.language_dispatch import LanguageDispatcher
 from llm.llm_client import LLMClient
@@ -27,6 +28,7 @@ def main():
     wm = WorkingMemory()
     llm_client = LLMClient(api_key, api_url)
     dispatcher = LanguageDispatcher(llm_client)
+    abstractor = Abstractor(em_store)
 
     print("欢迎使用 AGI-V1 助手！输入 'exit' 或 'quit' 退出。")
 
