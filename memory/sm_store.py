@@ -109,6 +109,15 @@ class SMStore:
         c.execute("SELECT content FROM semantic_memory")
         return [row[0] for row in c.fetchall()]
 
+    def get_all_keys(self):
+        """
+        列出所有出现过的 key（无重复）。
+        :return: list of keys
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT DISTINCT key FROM episodic_memory")
+        return [row[0] for row in c.fetchall()]
+
 if __name__ == '__main__':
     sm = SMStore()              # 打开（或创建）sm.db
     sm.add("地球", "地球是太阳系的第三颗行星。")

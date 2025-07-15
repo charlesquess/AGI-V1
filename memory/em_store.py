@@ -77,7 +77,7 @@ class EMStore:
         c.execute("SELECT 1 FROM episodic_memory WHERE key = ? LIMIT 1", (key,))
         return c.fetchone() is not None
 
-    def all_keys(self):
+    def get_all_keys(self):
         """
         列出所有出现过的 key（无重复）。
         :return: list of keys
