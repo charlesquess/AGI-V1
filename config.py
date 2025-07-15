@@ -9,3 +9,9 @@ LLM_CONFIG = {
     "n_gpu_layers": 40,  # 使用GPU加速的层数
     "system_prompt": "你是一个乐于助人的生活助理，根据用户记忆提供友好建议。"
 }
+
+# 本地 Ollama 服务下要用的模型名
+MODEL_NAME = "llama3"
+
+# Ollama HTTP 接口地址
+MODEL_URL = "http://localhost:11434/v1/chat/completions"

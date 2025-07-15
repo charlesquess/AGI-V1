@@ -1,5 +1,5 @@
 import sys
-from config import API_KEY, API_URL
+from config import MODEL_NAME, MODEL_URL
 from intent.intent_detector import IntentDetector
 from memory.em_store import EMStore
 from memory.sm_store import SMStore
@@ -7,11 +7,17 @@ from memory.ms_store import MSStore
 from memory.memory_filter import MemoryFilter
 from wm.working_memory import WorkingMemory
 from dialogue.language_dispatch import LanguageDispatcher
-from llm.llm_client import LLMClient
+from llm.llm_client import Llama3Client as LLMClient
 from memory.abstractor import Abstractor
 from utils.tools import Tools
 
 def main():
+    # 1. 启动时检查 Ollama 服务
+    try:
+        Tools.ensure_ollama_running()
+    except RuntimeError as e:
+        print(f"启动失败：{e}")
+        sys.exit(1)
     intent_detector = IntentDetector()
     em_store = EMStore()
     sm_store = SMStore()
@@ -21,7 +27,7 @@ def main():
     memory_filter = MemoryFilter(em_store, sm_store, ms_store)
 
     wm = WorkingMemory()
-    llm_client = LLMClient(API_KEY, API_URL)
+    llm_client = LLMClient()  # 会自动读取 config.MODEL_NAME 和 MODEL_URL
     dispatcher = LanguageDispatcher(llm_client)
     abstractor = Abstractor(em_store, sm_store)
 
@@ -43,6 +49,7 @@ def main():
 
         relevant_memories = memory_filter.filter(intents, user_input)
         wm.load_memories(relevant_memories)
+        print(f"Assistant: 相关记忆：{relevant_memories}")
 
         response = dispatcher.generate_response(user_input, intents, wm)
         print(f"Assistant: {response}\n")

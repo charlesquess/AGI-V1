@@ -1,8 +1,8 @@
 # 抽象记忆层
 
 
-from llm.llm_client import LLMClient
-from config import API_KEY, API_URL
+from llm.llm_client import Llama3Client
+from config import MODEL_NAME, MODEL_URL
 from memory.sm_store import SMStore
 
 class Abstractor:
@@ -13,7 +13,7 @@ class Abstractor:
     def __init__(self, em_store, sm_store=None):
         self.em_store = em_store
         self.sm_store = sm_store or SMStore()
-        self.llm = LLMClient(API_KEY, API_URL)
+        self.llm = Llama3Client()
 
     def abstract(self, key: str):
         """

@@ -7,7 +7,7 @@ class LanguageDispatcher:
     """
 
     def __init__(self, llm_client, system_prompt=None, abstractor=None, default_model="gpt-3.5-turbo"):
-        self.llm = Llama3Client()
+        self.llm = Llama3Client(model="llama3", url="http://localhost:11434/api/chat")
         self.system_prompt = system_prompt or "你是一名智能助手。"
         self.abstractor = abstractor
         self.default_model = default_model
