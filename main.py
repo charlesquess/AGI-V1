@@ -28,7 +28,7 @@ def main():
     ms_store = MSStore()
 
     # 3. 构建向量索引（启动一次）
-    indexer = MemoryVectorIndexer(model_name="all-MiniLM-L6-v2")
+    indexer = MemoryVectorIndexer(model_name="all-minilm:l6-v2")
     indexer.build_indexes()
 
     wm = WorkingMemory()

@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import requests
 from typing import List, Tuple, Optional, Dict
+import hashlib
 
 
 class VectorStore:
@@ -114,3 +115,23 @@ class VectorStore:
             os.remove(self.index_path)
         if os.path.exists(self.meta_path):
             os.remove(self.meta_path)
+
+    # === 新增方法 ===
+    def add_texts(self, texts: List[str]):
+        """
+        添加文本列表到向量存储（自动生成key）
+        """
+        items = []
+        for text in texts:
+            # 使用文本内容的哈希作为key
+            key = hashlib.md5(text.encode()).hexdigest()
+            items.append((key, text))
+        
+        # 使用现有的批量添加方法
+        self.add_batch(items)
+
+    def similarity_search(self, query: str, k: int = 4) -> List[Dict]:
+        """
+        执行相似度搜索
+        """
+        return self.query(query, top_k=k)
