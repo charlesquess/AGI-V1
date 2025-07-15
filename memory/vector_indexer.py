@@ -34,12 +34,19 @@ class MemoryVectorIndexer:
             self.vs_ms.add_texts(texts)
 
     def query(self, text: str, top_k: int = 5):
-        results = []
-        for source, vs in [("episodic", self.vs_em),
-                           ("semantic", self.vs_sm),
-                           ("mission",  self.vs_ms)]:
+        all_hits = []
+        for source, vs in [
+            ("episodic", self.vs_em),
+            ("semantic", self.vs_sm),
+            ("mission", self.vs_ms)
+        ]:
             hits = vs.query(text, top_k)
-            for content, score in hits:
-                results.append({"source": source, "content": content, "score": score})
-        results.sort(key=lambda x: x["score"], reverse=True)
-        return results[:top_k]
+            for h in hits:
+                all_hits.append({
+                    "source": source,
+                    "key": h.get("key", None),
+                    "content": h.get("text", h.get("content")),
+                    "score": h["score"]
+                })
+        all_hits.sort(key=lambda x: x["score"], reverse=True)
+        return all_hits[:top_k]

@@ -55,16 +55,15 @@ def main():
 
         # 5. 向量检索最相关的记忆
         hits = indexer.query(user_input, top_k=5)
-        # 将 hits 转成工作记忆需要的格式
         mems = [
             {
                 "source": hit["source"],
-                "key": None,
+                "key": hit["key"],
                 "content": hit["content"],
                 "timestamp": ""
-            }
-            for hit in hits
+            } for hit in hits
         ]
+        # print(f"Assistant: 找到相关记忆：{[h['content'] for h in hits]}")
         wm.load_memories(mems)
         wm.add_context("user", user_input)
         print(f"Assistant: 找到相关记忆：{[h['content'] for h in hits]}")
