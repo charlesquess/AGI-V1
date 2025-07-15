@@ -1,4 +1,5 @@
 # 语言调度器模块
+from llm.llm_client import Llama3Client
 
 class LanguageDispatcher:
     """
@@ -6,7 +7,7 @@ class LanguageDispatcher:
     """
 
     def __init__(self, llm_client, system_prompt=None, abstractor=None, default_model="gpt-3.5-turbo"):
-        self.llm = llm_client
+        self.llm = Llama3Client()
         self.system_prompt = system_prompt or "你是一名智能助手。"
         self.abstractor = abstractor
         self.default_model = default_model
