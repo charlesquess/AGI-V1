@@ -101,6 +101,14 @@ class MSStore:
         """
         self.conn.close()
 
+    def get_all_texts(self) -> list[str]:
+        """
+        返回所有目标记忆的文本内容列表，用于向量化。
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT content FROM mission_state")
+        return [row[0] for row in c.fetchall()]
+
 if __name__ == '__main__':
     ms = MSStore() 
 

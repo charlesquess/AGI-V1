@@ -100,6 +100,14 @@ class SMStore:
         关闭数据库连接。
         """
         self.conn.close()
+    
+    def get_all_texts(self) -> list[str]:
+        """
+        返回所有语义记忆的文本内容列表，用于向量化。
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT content FROM semantic_memory")
+        return [row[0] for row in c.fetchall()]
 
 if __name__ == '__main__':
     sm = SMStore()              # 打开（或创建）sm.db

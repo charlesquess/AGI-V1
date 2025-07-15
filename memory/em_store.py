@@ -102,14 +102,22 @@ class EMStore:
         """关闭数据库连接。"""
         self.conn.close()
 
+    def get_all_texts(self) -> list[str]:
+        """
+        返回所有事实记忆的文本内容列表，用于向量化。
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT content FROM episodic_memory")
+        return [row[0] for row in c.fetchall()]
+
 if __name__ == '__main__':
     em = EMStore(db_path="em.db")
 
     # 添加多条同一个 key
-    em.add("吃饭", "你上午说你饿了。")
-    em.add("吃饭", "你中午去吃了拉面。")
-    em.add("花费", "中午的拉面花了 10 块钱。")
-    em.add("吃饭", "你下午又饿了。")
+    # em.add("吃饭", "你上午说你饿了。")
+    # em.add("吃饭", "你中午去吃了拉面。")
+    # em.add("花费", "中午的拉面花了 10 块钱。")
+    # em.add("吃饭", "你下午又饿了。")
 
 
     # 查询所有“吃饭”记录
