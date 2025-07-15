@@ -109,14 +109,21 @@ class SMStore:
         c.execute("SELECT content FROM semantic_memory")
         return [row[0] for row in c.fetchall()]
 
-    def get_all_keys(self):
+    def get_all_keys(self) -> list[str]:
         """
-        列出所有出现过的 key（无重复）。
-        :return: list of keys
+        返回所有 semantic_memory 表里的 key 列表。
         """
         c = self.conn.cursor()
-        c.execute("SELECT DISTINCT key FROM episodic_memory")
+        c.execute("SELECT DISTINCT key FROM semantic_memory")
         return [row[0] for row in c.fetchall()]
+
+    def get_all_records(self) -> list[tuple[str, str, str]]:
+        """
+        返回所有 (key, content, timestamp) 记录列表。
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT key, content, timestamp FROM semantic_memory")
+        return c.fetchall()
 
 if __name__ == '__main__':
     sm = SMStore()              # 打开（或创建）sm.db

@@ -77,15 +77,23 @@ class EMStore:
         c.execute("SELECT 1 FROM episodic_memory WHERE key = ? LIMIT 1", (key,))
         return c.fetchone() is not None
 
-    def get_all_keys(self):
+    def get_all_keys(self) -> list[str]:
         """
-        列出所有出现过的 key（无重复）。
-        :return: list of keys
+        返回所有 distinct key 列表，用于外部匹配。
         """
         c = self.conn.cursor()
         c.execute("SELECT DISTINCT key FROM episodic_memory")
         return [row[0] for row in c.fetchall()]
 
+    def get_all_records(self) -> list[tuple[str, str, str]]:
+        """
+        返回所有 (key, content, timestamp) 记录列表，
+        用于全文检索。
+        """
+        c = self.conn.cursor()
+        c.execute("SELECT key, content, timestamp FROM episodic_memory")
+        return c.fetchall()
+    
     def clear(self, key: str = None):
         """
         清空所有记忆，或者只清空指定 key 的所有记录。

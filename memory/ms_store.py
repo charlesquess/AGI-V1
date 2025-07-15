@@ -109,14 +109,15 @@ class MSStore:
         c.execute("SELECT content FROM mission_state")
         return [row[0] for row in c.fetchall()]
 
-    def get_all_keys(self):
-        """
-        列出所有出现过的 key（无重复）。
-        :return: list of keys
-        """
+    def get_all_keys(self) -> list[str]:
         c = self.conn.cursor()
-        c.execute("SELECT DISTINCT key FROM episodic_memory")
+        c.execute("SELECT DISTINCT key FROM mission_state")
         return [row[0] for row in c.fetchall()]
+
+    def get_all_records(self) -> list[tuple[str, str, str]]:
+        c = self.conn.cursor()
+        c.execute("SELECT key, content, timestamp FROM mission_state")
+        return c.fetchall()
 
 if __name__ == '__main__':
     ms = MSStore() 
