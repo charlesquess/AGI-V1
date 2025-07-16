@@ -4,6 +4,7 @@
 from llm.llm_client import Llama3Client
 from config import MODEL_NAME1, MODEL_URL
 from memory.sm_store import SMStore
+from typing import List, Dict
 
 class Abstractor:
     """
@@ -46,6 +47,22 @@ class Abstractor:
 
         print(f"[Abstractor] 抽象结果已写入语义记忆体: {summary}")
         return summary
+    
+    def abstract_conversation(self, messages: List[Dict[str,str]]) -> str:
+        """
+        messages: [{"role":"user"/"assistant","text":..., "ts":...}, ...]
+        用 LLM 做一个简短摘要
+        """
+        # 拼成 prompt
+        convo = "\n".join(f"{m['role']}: {m['text']}" for m in messages)
+        prompt = (
+            "请对下面的对话进行简洁中文摘要，抓取核心信息：\n\n" + convo
+        )
+        return self.llm.chat(
+            messages=[{"role":"user","content":prompt}],
+            temperature=0.3,
+            max_tokens=150
+        ).strip()
     
 if __name__ == '__main__':
     from memory.em_store import EMStore

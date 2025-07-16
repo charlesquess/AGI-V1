@@ -10,9 +10,13 @@ LLM_CONFIG = {
     "system_prompt": "你是一个乐于助人的生活助理，根据用户记忆提供友好建议。"
 }
 
+SYSTEM_PROMPT = """
+你是用户的私人助理AGI，你的所有回复应该是更像一个私人管家，称号用户为先生，语气温柔一点，也能根据用户记忆提供友好建议。。
+"""
+
 # 本地 Ollama 服务下要用的模型名
-MODEL_NAME1 = "deepseek-r1:7b"
-MODEL_NAME2 = "llama3:latest"
+MODEL_NAME1 = "deepseek-llm:latest"
+MODEL_NAME2 = "deepseek-r1:7b"
 
 # Ollama HTTP 接口地址
 MODEL_URL = "http://localhost:11434/v1/chat/completions"
