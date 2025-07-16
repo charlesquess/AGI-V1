@@ -1,7 +1,7 @@
 # import os
 # os.environ["TRANSFORMERS_NO_TF"] = "1"
 import sys
-from config import MODEL_NAME, MODEL_URL
+from config import MODEL_NAME1, MODEL_URL
 from intent.intent_detector import IntentDetector
 from memory.em_store import EMStore
 from memory.sm_store import SMStore
@@ -31,7 +31,7 @@ def main():
     retriever = SimpleMemoryRetriever(em_store, sm_store, ms_store)
 
     wm = WorkingMemory()
-    llm_client = LLMClient(model=MODEL_NAME, url=MODEL_URL)
+    llm_client = LLMClient(model=MODEL_NAME1, url=MODEL_URL)
     dispatcher = LanguageDispatcher(llm_client)
     abstractor = Abstractor(em_store, sm_store)
 

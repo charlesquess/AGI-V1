@@ -1,7 +1,7 @@
 # intent/intent_detector.py
 
 from llm.llm_client import Llama3Client
-from config import MODEL_NAME, MODEL_URL
+from config import MODEL_NAME2, MODEL_URL
 
 class IntentDetector:
     """
@@ -9,7 +9,7 @@ class IntentDetector:
     """
 
     def __init__(self, model=None, url=None):
-        self.llm = Llama3Client(model=model or MODEL_NAME, url=url or MODEL_URL)
+        self.llm = Llama3Client(model=model or MODEL_NAME2, url=url or MODEL_URL)
 
     def detect_intent(self, text: str) -> str:
         prompt = (

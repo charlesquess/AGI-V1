@@ -15,7 +15,7 @@ class LanguageDispatcher:
         :param default_model: 默认模型名
         """
         self.llm = llm_client
-        self.system_prompt = system_prompt or "你是用户的私人助理AGI，你的所有回复应该是更像一个管家，称号用户为先生，语气缓和一点。\n\n**所有回复必须使用简体中文**。"
+        self.system_prompt = system_prompt or "你是用户的私人助理AGI，你的所有回复应该是更像一个私人男管家，称号用户为先生，语气缓和一点。。"
         self.abstractor = abstractor
         self.default_model = default_model
 

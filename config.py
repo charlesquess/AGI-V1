@@ -11,7 +11,8 @@ LLM_CONFIG = {
 }
 
 # 本地 Ollama 服务下要用的模型名
-MODEL_NAME = "llama3"
+MODEL_NAME1 = "deepseek-r1:7b"
+MODEL_NAME2 = "llama3:latest"
 
 # Ollama HTTP 接口地址
 MODEL_URL = "http://localhost:11434/v1/chat/completions"

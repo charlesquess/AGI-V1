@@ -2,7 +2,7 @@
 
 
 from llm.llm_client import Llama3Client
-from config import MODEL_NAME, MODEL_URL
+from config import MODEL_NAME1, MODEL_URL
 from memory.sm_store import SMStore
 
 class Abstractor:

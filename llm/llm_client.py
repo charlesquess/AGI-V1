@@ -1,12 +1,12 @@
 # llm/llm_client.py
 
-from config import MODEL_NAME, MODEL_URL
+from config import MODEL_NAME1, MODEL_URL
 import json, urllib.request
 import random
 
 class Llama3Client:
     def __init__(self, model=None, url=None):
-        self.model = model or MODEL_NAME
+        self.model = model or MODEL_NAME1
         self.url   = url   or MODEL_URL
 
     def chat(self, messages, model=None, temperature=0.7, max_tokens=None, **kwargs):
